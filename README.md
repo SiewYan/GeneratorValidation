@@ -1,4 +1,4 @@
-# Sherpa-Validation
+# Sherpa-Madgraph-GenValidation
 Sherpa-Validation: madgraph gridpack vs sherpack. The packages contain all the necessary machinery to start off a validation workflow on comparing gridpack across Madgraph and Sherpa.
 
 ## Environment setup
