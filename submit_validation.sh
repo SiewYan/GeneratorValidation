@@ -22,15 +22,14 @@ OTAGLIST=()
 GRIDPACKLIST=() 
 GENFRAGMENTLIST=()
 
-#OTAGLIST+=(zee0j)
+OTAGLIST+=(zee0j)
 OTAGLIST+=(sherpa_ZtoEE_0j_OpenLoops_13TeV)
-#GRIDPACKLIST+=(${WORKDIR}/gridpacks/zee0j_slc6_amd64_gcc481_CMSSW_7_1_30_tarball.tar.xz)
+GRIDPACKLIST+=(${WORKDIR}/gridpacks/zee0j_slc6_amd64_gcc481_CMSSW_7_1_30_tarball.tar.xz)
 GRIDPACKLIST+=(${WORKDIR}/gridpacks/sherpa_ZtoEE_0j_OpenLoops_13TeV_MASTER.tgz)
+GENFRAGMENTLIST+=(ZEE_13TeV_cfi)
+GENFRAGMENTLIST+=(sherpa_ZtoEE_0j_OpenLoops_13TeV_MASTER_cff)
 
 #GENFRAGMENTLIST+=( Hadronizer_TuneCUETP8M1_13TeV_MLM_5f_max2j_LHE_pythia8_cff ) 
-#one to one corresponding
-#GENFRAGMENTLIST+=(ZEE_13TeV_cfi)
-GENFRAGMENTLIST+=(sherpa_ZtoEE_0j_OpenLoops_13TeV_MASTER_cff)
 #GENFRAGMENT=Hadronizer_TuneCUETP8M1_13TeV_MLM_5f_max4j_LHE_pythia8_cff # wjets/zjets
 #GENFRAGMENT=Hadronizer_TuneCUETP8M1_13TeV_aMCatNLO_FXFX_5f_max2j_max0p_LHE_pythia8_cff # zjets fxfx
 #GENFRAGMENT=Hadronizer_TuneCUETP8M1_13TeV_aMCatNLO_FXFX_5f_max2j_max1p_LHE_pythia8_cff # ttbar fxfx 
