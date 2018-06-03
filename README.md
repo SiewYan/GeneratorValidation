@@ -1,12 +1,13 @@
 # Sherpa-Validation
 Sherpa-Validation: madgraph gridpack vs sherpack. The packages contain all the necessary machinery to start off a validation workflow on comparing gridpack across Madgraph and Sherpa.
 
-## Clone the package
+## Environment setup
 
    Clone the package into a clean directory without CMSSW environment. A standard gridpack from madgraph and sherpa was prepared in gridpacks folder. Both gridpacks were made for ZtoEE 0jets process, The following step pertains the construction of validation workflow.
 
    ```
    git clone https://github.com/SiewYan/Sherpa-Validation.git
+   cd Sherpa-Validation
    ```
 ## Configures validation
    
@@ -31,3 +32,7 @@ Sherpa-Validation: madgraph gridpack vs sherpack. The packages contain all the n
    - [ ] Z+jets LO 3jets
    - [ ] TT+jets 2jets
    - [ ] gamma+jets
+
+### Reference
+
+    - [GenValidation github](https://github.com/cms-sw/genproductions/tree/master/bin/GenValidation)
