@@ -28,10 +28,11 @@ GRIDPACKLIST+=(${WORKDIR}/gridpacks/zee0j_slc6_amd64_gcc481_CMSSW_7_1_30_tarball
 GENFRAGMENTLIST+=(ZEE_13TeV_cfi)
 
 #SHERPACK
-#OTAGLIST+=(sherpa_ZtoEE_0j_OpenLoops_13TeV)
-#GRIDPACKLIST+=(${WORKDIR}/gridpacks/sherpa_ZtoEE_0j_OpenLoops_13TeV_MASTER.tgz)
-#GENFRAGMENTLIST+=(sherpa_ZtoEE_0j_OpenLoops_13TeV_MASTER_cff)
+OTAGLIST+=(sherpa_ZtoEE_0j_OpenLoops_13TeV)
+GRIDPACKLIST+=(${WORKDIR}/gridpacks/sherpa_ZtoEE_0j_OpenLoops_13TeV_MASTER.tgz)
+GENFRAGMENTLIST+=(sherpa_ZtoEE_0j_OpenLoops_13TeV_MASTER_cff)
 
+###############################################
 #GENFRAGMENTLIST+=( Hadronizer_TuneCUETP8M1_13TeV_MLM_5f_max2j_LHE_pythia8_cff ) 
 #GENFRAGMENT=Hadronizer_TuneCUETP8M1_13TeV_MLM_5f_max4j_LHE_pythia8_cff # wjets/zjets
 #GENFRAGMENT=Hadronizer_TuneCUETP8M1_13TeV_aMCatNLO_FXFX_5f_max2j_max0p_LHE_pythia8_cff # zjets fxfx
