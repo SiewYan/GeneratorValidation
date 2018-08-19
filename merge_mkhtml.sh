@@ -2,7 +2,8 @@
 
 ### settings to modify
 RELEASE=CMSSW_9_3_8
-ODIR="/afs/cern.ch/work/s/shoh/analysis/SherpaStudies/Sherpa-Validation/samples"
+DIRR=`pwd -P`
+ODIR="${DIRR}/samples"
 # maximum number of files to compare (making sure we are comparing the same state) 
 NFILES=100 
 # name of sub directories in $ODIR containing the samples to compare 
@@ -79,4 +80,4 @@ compare_using_files.py DQM_V0001_R00000000__Global__${CMSSW_VERSION}_${TAGONE}__
 
 ### clean up 
 rm harvest.py 
-rm DQM*.root 
+#rm DQM*.root 

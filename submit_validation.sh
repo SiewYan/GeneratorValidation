@@ -22,12 +22,15 @@ OTAGLIST=()
 GRIDPACKLIST=() 
 GENFRAGMENTLIST=()
 
+#GRIDPACK
 OTAGLIST+=(zee0j)
-OTAGLIST+=(sherpa_ZtoEE_0j_OpenLoops_13TeV)
 GRIDPACKLIST+=(${WORKDIR}/gridpacks/zee0j_slc6_amd64_gcc481_CMSSW_7_1_30_tarball.tar.xz)
-GRIDPACKLIST+=(${WORKDIR}/gridpacks/sherpa_ZtoEE_0j_OpenLoops_13TeV_MASTER.tgz)
 GENFRAGMENTLIST+=(ZEE_13TeV_cfi)
-GENFRAGMENTLIST+=(sherpa_ZtoEE_0j_OpenLoops_13TeV_MASTER_cff)
+
+#SHERPACK
+#OTAGLIST+=(sherpa_ZtoEE_0j_OpenLoops_13TeV)
+#GRIDPACKLIST+=(${WORKDIR}/gridpacks/sherpa_ZtoEE_0j_OpenLoops_13TeV_MASTER.tgz)
+#GENFRAGMENTLIST+=(sherpa_ZtoEE_0j_OpenLoops_13TeV_MASTER_cff)
 
 #GENFRAGMENTLIST+=( Hadronizer_TuneCUETP8M1_13TeV_MLM_5f_max2j_LHE_pythia8_cff ) 
 #GENFRAGMENT=Hadronizer_TuneCUETP8M1_13TeV_MLM_5f_max4j_LHE_pythia8_cff # wjets/zjets
@@ -52,11 +55,11 @@ git-cms-addpkg --quiet Configuration/Generator
 
 ### copy additional fragments if needed 
 if [ -d "${FRAGMENTDIR}" ]; then 
-    cp ${FRAGMENTDIR}/*.py ${CMSSW_BASE}/src/Configuration/Generator/python/. 
+    cp ${FRAGMENTDIR}/*.py ${CMSSW_BASE}/src/Configuration/Generator/python/
 fi
 
 ### scram release 
-scram b 
+#scram b 
 
 
 ### start tag loop for setups to be validated  
@@ -66,12 +69,24 @@ for ITAG in `seq 0 ${NTAG}`; do
     OTAG=${OTAGLIST[${ITAG}]}
     GRIDPACK=${GRIDPACKLIST[${ITAG}]}
     GENFRAGMENT=${GENFRAGMENTLIST[${ITAG}]}
-    echo "percieve GRIDPACK : ${GRIDPACK}"
-    echo "percieve GENFRAGMENT : ${GENFRAGMENT}"
-    
+
+    if [ -e "${GRIDPACK}" ];then
+	echo "percieve GRIDPACK : ${GRIDPACK}"
+    else
+	echo "[WARNING: ] gridpack ${GRIDPACK} does not exist, skipping"
+	continue
+    fi
+
+    if [ -e "${FRAGMENTDIR}/${GENFRAGMENT}.py" ];then
+	echo "percieve GENFRAGMENT : ${GENFRAGMENT}"
+    else
+	echo "[WARNING: ] gridpack ${GENFRAGMENT}.py does not exist, skipping"
+	continue
+    fi
+
     ### move to python path 
-    cd ${CMSSW_BASE}/src/Configuration/Generator/python/
-    
+    eval cd ${CMSSW_BASE}/src/Configuration/Generator/python/
+
     ### check that fragments are available 
     echo "Check that fragments are available ..."
     if [ ! -s ${GENFRAGMENT}.py ] ; then 
@@ -96,7 +111,8 @@ for ITAG in `seq 0 ${NTAG}`; do
     fi
     ##
     teststring=`echo "${OTAG}" | awk -F "_" '{print $1}'`
-
+    
+    ##create pre-frabicated fragment
     if [ "${teststring}" != "sherpa" ];then
 	cat > ${CONFIG} <<EOF
 import FWCore.ParameterSet.Config as cms
@@ -108,14 +124,17 @@ outputFile = cms.string('cmsgrid_final.lhe'),
 scriptName = cms.FileInPath('GeneratorInterface/LHEInterface/data/run_generic_tarball_cvmfs.sh')
 )
 EOF
+	##append the hadronizer setting to the pre-fabricated fragment
 	cat ${GENFRAGMENT}.py >> ${CONFIG}
+	scram b
 	### make validation fragment
 	cmsDriver.py Configuration/Generator/python/${CONFIG} \
             -n ${NEVTS} --mc --no_exec --python_filename cmsrun_${OTAG}.py \
             -s LHE,GEN,VALIDATION:genvalid_all --datatier GEN,GEN-SIM,DQMIO --eventcontent LHE,RAWSIM,DQM \
             --conditions auto:run2_mc_FULL --beamspot Realistic8TeVCollision
 	### move to submission directory
-	cd ${WORKDIR}
+	eval cd ${WORKDIR}
+	## Create execution script
 	cat > subscript_${OTAG}.sh <<EOF
 #!/bin/bash                                                                                                                                                                  
 pushd ${CMSSW_BASE}/src/                                                                                                                                                     
@@ -147,16 +166,19 @@ rm -rf tmp_\${OTAG}_\${OFFSET}
 EOF
     # adjust rights
     chmod 755 subscript_${OTAG}.sh
+
     else
-	echo "Sherpack detected, skipping LHE production to Showered root file production"
+	## Sherpack does not need to produce intermediary LHE file, go straightaway to hadronization
+	echo "Sherpack detected, skipping LHE production to Shower root file production"	
 	sed -e "s,XXX,$WORKDIR," ${GENFRAGMENT}.py > ${GENFRAGMENT}.py_ ; mv ${GENFRAGMENT}.py_ ${GENFRAGMENT}.py 
+	scram b 
         ### make validation fragment
 	cmsDriver.py Configuration/Generator/python/${GENFRAGMENT}.py \
 	    -n ${NEVTS} --mc --no_exec --python_filename cmsrun_${OTAG}.py \
 	    -s GEN,VALIDATION:genvalid_all --datatier GEN-SIM,DQMIO --eventcontent RAWSIM,DQM \
 	    --conditions auto:run2_mc_FULL --beamspot Realistic8TeVCollision
     ### move to submission directory 
-    cd ${WORKDIR}
+    eval cd ${WORKDIR}
     ### prepare submission script 
     cat > subscript_${OTAG}.sh <<EOF 
 #!/bin/bash
