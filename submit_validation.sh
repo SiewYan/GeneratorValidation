@@ -1,5 +1,5 @@
 #!/bin/bash
-
+set -e
 ### settings to modify
 # specify batch system 
 BATCH=LSF # SGE LSF 
@@ -12,8 +12,8 @@ WORKDIR=`pwd -P`
 # path for private fragments not yet in cmssw
 FRAGMENTDIR=${WORKDIR}/fragments
 # release setup 
-SCRAM_ARCH=slc6_amd64_gcc630
-RELEASE=CMSSW_9_3_8
+SCRAM_ARCH=slc6_amd64_gcc700
+RELEASE=CMSSW_10_3_0_pre5
 # path to store output files
 ODIR=${WORKDIR}/samples
 
@@ -23,14 +23,19 @@ GRIDPACKLIST=()
 GENFRAGMENTLIST=()
 
 #GRIDPACK
-OTAGLIST+=(zee0j)
-GRIDPACKLIST+=(${WORKDIR}/gridpacks/zee0j_slc6_amd64_gcc481_CMSSW_7_1_30_tarball.tar.xz)
-GENFRAGMENTLIST+=(ZEE_13TeV_cfi)
+#OTAGLIST+=(zee0j)
+#GRIDPACKLIST+=(${WORKDIR}/gridpacks/zee0j_slc6_amd64_gcc481_CMSSW_7_1_30_tarball.tar.xz)
+#GENFRAGMENTLIST+=(ZEE_13TeV_cfi)
 
-#SHERPACK
-OTAGLIST+=(sherpa_ZtoEE_0j_OpenLoops_13TeV)
-GRIDPACKLIST+=(${WORKDIR}/gridpacks/sherpa_ZtoEE_0j_OpenLoops_13TeV_MASTER.tgz)
-GENFRAGMENTLIST+=(sherpa_ZtoEE_0j_OpenLoops_13TeV_MASTER_cff)
+#SHERPACK1
+OTAGLIST+=(sherpa_WtoLNu_2j_NLO_OpenLoops_CKKW_13TeV)
+GRIDPACKLIST+=(${WORKDIR}/GEN-packs/sherpa_WtoLNu_2j_NLO_OpenLoops_CKKW_13TeV_MASTER.tgz)
+GENFRAGMENTLIST+=(sherpa_WtoLNu_2j_NLO_OpenLoops_CKKW_13TeV_MASTER_cff)
+
+#SHERPACK2
+OTAGLIST+=(sherpa_WtoLNu_2j_NLO_BlackHat_CKKW_13TeV)
+GRIDPACKLIST+=(${WORKDIR}/GEN-packs/sherpa_WtoLNu_2j_NLO_BlackHat_CKKW_13TeV_MASTER.tgz)
+GENFRAGMENTLIST+=(sherpa_WtoLNu_2j_NLO_BlackHat_CKKW_13TeV_MASTER_cff)
 
 ###############################################
 #GENFRAGMENTLIST+=( Hadronizer_TuneCUETP8M1_13TeV_MLM_5f_max2j_LHE_pythia8_cff ) 
@@ -39,6 +44,7 @@ GENFRAGMENTLIST+=(sherpa_ZtoEE_0j_OpenLoops_13TeV_MASTER_cff)
 #GENFRAGMENT=Hadronizer_TuneCUETP8M1_13TeV_aMCatNLO_FXFX_5f_max2j_max1p_LHE_pythia8_cff # ttbar fxfx 
 ### done with settings 
 
+rm subscript_sherpa_*
 
 ### setup release 
 if [ -r ${WORKDIR}/${RELEASE}/src ] ; then 
@@ -137,31 +143,31 @@ EOF
 	eval cd ${WORKDIR}
 	## Create execution script
 	cat > subscript_${OTAG}.sh <<EOF
-#!/bin/bash                                                                                                                                                                  
-pushd ${CMSSW_BASE}/src/                                                                                                                                                     
-eval \`scram runtime -sh\`                                                                                                                                                   
-popd                                                                                                                                                                         
-if [ ! -z ${TMPDIR} ] ; then                                                                                                                                                 
-cd ${TMPDIR}                                                                                                                                                                 
-fi                                                                                                                                                                           
-mkdir -p tmp_\${OTAG}_\${OFFSET}                                                                                                                                             
-cd tmp_\${OTAG}_\${OFFSET}                                                                                                                                                   
-echo "execute job in path $PWD"                                                                                                                                              
-cp ${CMSSW_BASE}/src/Configuration/Generator/python/cmsrun_\${OTAG}.py .                                                                                                     
-### adjust random numbers                                                                                                                                                    
-LINE=\`egrep -n Configuration.StandardSequences.Services_cff cmsrun_\${OTAG}.py | cut -d: -f1 \`                                                                             
-SEED=\`echo "5267+\${OFFSET}" | bc\`                                                                                                                                         
-sed -i "\${LINE}"aprocess.RandomNumberGeneratorService.generator.initialSeed=\${SEED} cmsrun_\${OTAG}.py                                                                     
-SEED=\`echo "289634+\${OFFSET}" | bc\`                                                                                                                                       
-sed -i "\${LINE}"aprocess.RandomNumberGeneratorService.externalLHEProducer.initialSeed=\${SEED} cmsrun_\${OTAG}.py                                                           
-### run config                                                                                                                                                               
-cmsRun cmsrun_\${OTAG}.py || exit $? ;                                                                                                                                       
-### copy output                                                                                                                                                              
-if [ $? -eq 0 ]; then                                                                                                                                                        
-cp *_inDQM.root \${ODIR}/\${OTAG}_\${OFFSET}.root                                                                                                                            
-else                                                                                                                                                                         
-echo "Generation problems please check log file carefully!"                                                                                                                  
-fi                                                                                                                                                                       
+#!/bin/bash                                                                     
+pushd ${CMSSW_BASE}/src/                                                                                              
+eval \`scram runtime -sh\`                                                                                                     
+popd                                         
+if [ ! -z ${TMPDIR} ] ; then                                                                                                          
+cd ${TMPDIR}                                                                                                             
+fi                                                                                                            
+mkdir -p tmp_\${OTAG}_\${OFFSET}                                                                          
+cd tmp_\${OTAG}_\${OFFSET}                                                                
+echo "execute job in path $PWD"                                                                             
+cp ${CMSSW_BASE}/src/Configuration/Generator/python/cmsrun_\${OTAG}.py .                             
+### adjust random numbers                                                                                                    
+LINE=\`egrep -n Configuration.StandardSequences.Services_cff cmsrun_\${OTAG}.py | cut -d: -f1 \`      
+SEED=\`echo "5267+\${OFFSET}" | bc\`                                                                                    
+sed -i "\${LINE}"aprocess.RandomNumberGeneratorService.generator.initialSeed=\${SEED} cmsrun_\${OTAG}.py             
+SEED=\`echo "289634+\${OFFSET}" | bc\`                                                                                         
+sed -i "\${LINE}"aprocess.RandomNumberGeneratorService.externalLHEProducer.initialSeed=\${SEED} cmsrun_\${OTAG}.py         
+### run config                                                                                                                 
+cmsRun cmsrun_\${OTAG}.py || exit $? ;                                                                             
+### copy output                                                                                                            
+if [ $? -eq 0 ]; then                                                                                                     
+cp *_inDQM.root \${ODIR}/\${OTAG}_\${OFFSET}.root                                                                     
+else                                                                          
+echo "Generation problems please check log file carefully!"                                                                   
+fi                                                                
 cd ../
 rm -rf tmp_\${OTAG}_\${OFFSET}                                                                                           
 EOF
@@ -169,9 +175,19 @@ EOF
     chmod 755 subscript_${OTAG}.sh
 
     else
-	## Sherpack does not need to produce intermediary LHE file, go straightaway to hadronization
+	## Sherpack does not produce intermediary LHE file, go straightaway to hadronization
+	target1="from SherpaGeneration.Generator.ExtendedSherpaWeights_cfi import *"
+	replace1="from Configuration.Generator.ExtendedSherpaWeights_cfi import *"
+	target2="SherpackLocation = cms.string('./'),"
+	replace2="SherpackLocation = cms.string('$WORKDIR/GEN-packs/'),"
+	target3="FetchSherpack = cms.bool(False),"
+	replace3="FetchSherpack = cms.bool(True),"
 	echo "Sherpack detected, skipping LHE production to Shower root file production"	
-	sed -e "s,XXX,$WORKDIR," ${GENFRAGMENT}.py > ${GENFRAGMENT}.py_ ; mv ${GENFRAGMENT}.py_ ${GENFRAGMENT}.py 
+	#sed -e "s,XXX,$WORKDIR," ${GENFRAGMENT}.py > ${GENFRAGMENT}.py_ ; mv ${GENFRAGMENT}.py_ ${GENFRAGMENT}.py 
+	sed -e "s,$target1,$replace1," ${GENFRAGMENT}.py > ${GENFRAGMENT}.py_ ; mv ${GENFRAGMENT}.py_ ${GENFRAGMENT}.py
+	sed -e "s,$target2,$replace2," ${GENFRAGMENT}.py > ${GENFRAGMENT}.py_ ; mv ${GENFRAGMENT}.py_ ${GENFRAGMENT}.py
+	sed -e "s,$target3,$replace3," ${GENFRAGMENT}.py > ${GENFRAGMENT}.py_ ; mv ${GENFRAGMENT}.py_ ${GENFRAGMENT}.py
+	
 	scram b 
         ### make validation fragment
 	cmsDriver.py Configuration/Generator/python/${GENFRAGMENT}.py \
