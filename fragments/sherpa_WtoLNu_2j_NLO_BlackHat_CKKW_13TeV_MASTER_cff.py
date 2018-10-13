@@ -1,6 +1,6 @@
 import FWCore.ParameterSet.Config as cms
 import os
-from Configuration.Generator.ExtendedSherpaWeights_cfi import *
+#from Configuration.Generator.ExtendedSherpaWeights_cfi import *
 
 source = cms.Source("EmptySource")
 

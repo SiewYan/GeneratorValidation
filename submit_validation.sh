@@ -176,18 +176,9 @@ EOF
 
     else
 	## Sherpack does not produce intermediary LHE file, go straightaway to hadronization
-	target1="from SherpaGeneration.Generator.ExtendedSherpaWeights_cfi import *"
-	replace1="from Configuration.Generator.ExtendedSherpaWeights_cfi import *"
-	target2="SherpackLocation = cms.string('./'),"
-	replace2="SherpackLocation = cms.string('$WORKDIR/GEN-packs/'),"
-	target3="FetchSherpack = cms.bool(False),"
-	replace3="FetchSherpack = cms.bool(True),"
 	echo "Sherpack detected, skipping LHE production to Shower root file production"	
-	#sed -e "s,XXX,$WORKDIR," ${GENFRAGMENT}.py > ${GENFRAGMENT}.py_ ; mv ${GENFRAGMENT}.py_ ${GENFRAGMENT}.py 
-	sed -e "s,$target1,$replace1," ${GENFRAGMENT}.py > ${GENFRAGMENT}.py_ ; mv ${GENFRAGMENT}.py_ ${GENFRAGMENT}.py
-	sed -e "s,$target2,$replace2," ${GENFRAGMENT}.py > ${GENFRAGMENT}.py_ ; mv ${GENFRAGMENT}.py_ ${GENFRAGMENT}.py
-	sed -e "s,$target3,$replace3," ${GENFRAGMENT}.py > ${GENFRAGMENT}.py_ ; mv ${GENFRAGMENT}.py_ ${GENFRAGMENT}.py
-	
+	sed -e "s,XXX,$WORKDIR," ${GENFRAGMENT}.py > ${GENFRAGMENT}.py_ ; mv ${GENFRAGMENT}.py_ ${GENFRAGMENT}.py 
+
 	scram b 
         ### make validation fragment
 	cmsDriver.py Configuration/Generator/python/${GENFRAGMENT}.py \

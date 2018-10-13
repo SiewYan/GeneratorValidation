@@ -1,6 +1,6 @@
 import FWCore.ParameterSet.Config as cms
 import os
-from Configuration.Generator.ExtendedSherpaWeights_cfi import *
+#from Configuration.Generator.ExtendedSherpaWeights_cfi import *
 
 source = cms.Source("EmptySource")
 
@@ -9,8 +9,8 @@ generator = cms.EDFilter("SherpaGeneratorFilter",
   filterEfficiency = cms.untracked.double(1.0),
   crossSection = cms.untracked.double(-1),
   SherpaProcess = cms.string('WtoLNu_2j_NLO_OpenLoops_CKKW_13TeV'),
-  SherpackLocation = cms.string('XXX/GEN-packs'),
-  SherpackChecksum = cms.string('19c194a4d347c398a84522fa24984c0b'),
+  SherpackLocation = cms.string('XXX/GEN-packs/'),
+  SherpackChecksum = cms.string('106f52c4b1e2461cd18e557a5b6c55b2'),
   FetchSherpack = cms.bool(True),
   SherpaPath = cms.string('./'),
   SherpaPathPiece = cms.string('./'),
@@ -22,7 +22,7 @@ generator = cms.EDFilter("SherpaGeneratorFilter",
                              "Run"),
                               MPI_Cross_Sections = cms.vstring(
 				" MPIs in Sherpa, Model = Amisic:",
-				" semihard xsec = 2.03073e+06 mb,",
+				" semihard xsec = 1.99341e+06 mb,",
 				" non-diffractive xsec = 17.0318 mb with nd factor = 0.3142."
                                                   ),
                               Run = cms.vstring(
