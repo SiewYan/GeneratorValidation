@@ -1,5 +1,5 @@
 #!/bin/bash
-set -e
+
 ### settings to modify
 # specify batch system 
 BATCH=LSF # SGE LSF 
@@ -12,8 +12,10 @@ WORKDIR=`pwd -P`
 # path for private fragments not yet in cmssw
 FRAGMENTDIR=${WORKDIR}/fragments
 # release setup 
-SCRAM_ARCH=slc6_amd64_gcc700
-RELEASE=CMSSW_10_3_0_pre5
+#SCRAM_ARCH=slc6_amd64_gcc700
+#RELEASE=CMSSW_10_3_0_pre5
+SCRAM_ARCH=slc6_amd64_gcc493
+RELEASE=CMSSW_9_4_8
 # path to store output files
 ODIR=${WORKDIR}/samples
 
@@ -42,9 +44,7 @@ GENFRAGMENTLIST+=(sherpa_WtoLNu_2j_NLO_BlackHat_CKKW_13TeV_MASTER_cff)
 #GENFRAGMENT=Hadronizer_TuneCUETP8M1_13TeV_MLM_5f_max4j_LHE_pythia8_cff # wjets/zjets
 #GENFRAGMENT=Hadronizer_TuneCUETP8M1_13TeV_aMCatNLO_FXFX_5f_max2j_max0p_LHE_pythia8_cff # zjets fxfx
 #GENFRAGMENT=Hadronizer_TuneCUETP8M1_13TeV_aMCatNLO_FXFX_5f_max2j_max1p_LHE_pythia8_cff # ttbar fxfx 
-### done with settings 
-
-rm subscript_sherpa_*
+### done with settings
 
 ### setup release 
 if [ -r ${WORKDIR}/${RELEASE}/src ] ; then 

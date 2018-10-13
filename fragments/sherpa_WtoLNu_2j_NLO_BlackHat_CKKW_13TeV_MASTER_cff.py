@@ -1,6 +1,5 @@
 import FWCore.ParameterSet.Config as cms
 import os
-#from Configuration.Generator.ExtendedSherpaWeights_cfi import *
 
 source = cms.Source("EmptySource")
 
@@ -9,20 +8,19 @@ generator = cms.EDFilter("SherpaGeneratorFilter",
   filterEfficiency = cms.untracked.double(1.0),
   crossSection = cms.untracked.double(-1),
   SherpaProcess = cms.string('WtoLNu_2j_NLO_BlackHat_CKKW_13TeV'),
-  SherpackLocation = cms.string('/afs/cern.ch/work/s/shoh/analysis/SherpaStudies/Sherpa-Generation/CMSSW_10_3_0_pre5/src/GeneratorValidation/GEN-packs/'),
-  SherpackChecksum = cms.string('f6ee342f76d3e07e4855781dc7c72b59'),
+  SherpackLocation = cms.string('/afs/cern.ch/work/s/shoh/analysis/SherpaStudies/Sherpa-Generation/CMSSW_9_4_8/src/GeneratorValidation/GEN-packs/'),
+  SherpackChecksum = cms.string('b4085cda6af7f10f2066292ee749ea50'),
   FetchSherpack = cms.bool(True),
   SherpaPath = cms.string('./'),
   SherpaPathPiece = cms.string('./'),
   SherpaResultDir = cms.string('Result'),
   SherpaDefaultWeight = cms.double(1.0),
-  SherpaWeightsBlock = SherpaWeightsBlock,
   SherpaParameters = cms.PSet(parameterSets = cms.vstring(
                              "MPI_Cross_Sections",
                              "Run"),
                               MPI_Cross_Sections = cms.vstring(
 				" MPIs in Sherpa, Model = Amisic:",
-				" semihard xsec = 1.99341e+06 mb,",
+				" semihard xsec = 41.8446 mb,",
 				" non-diffractive xsec = 17.0318 mb with nd factor = 0.3142."
                                                   ),
                               Run = cms.vstring(
@@ -33,7 +31,7 @@ generator = cms.EDFilter("SherpaGeneratorFilter",
 				" SCALES METS{FSF*MU_F2}{RSF*MU_R2}{QSF*MU_Q2};",
 				" NJET:=2; LJET=2,3,4; QCUT:=20.;",
 				" ME_SIGNAL_GENERATOR Comix Amegic LOOPGEN;",
-				" OL_PREFIX=/cvmfs/cms.cern.ch/slc6_amd64_gcc700/external/openloops/2.0.b",
+				" OL_PREFIX=/cvmfs/cms.cern.ch/slc6_amd64_gcc630/external/openloops/1.3.1-fmblme",
 				" EVENT_GENERATION_MODE Weighted;",
 				" LOOPGEN:=BlackHat;",
 				" PDF_LIBRARY     = LHAPDFSherpa;",
