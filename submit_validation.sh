@@ -138,7 +138,7 @@ EOF
 	cmsDriver.py Configuration/Generator/python/${CONFIG} \
             -n ${NEVTS} --mc --no_exec --python_filename cmsrun_${OTAG}.py \
             -s LHE,GEN,VALIDATION:genvalid_all --datatier GEN,GEN-SIM,DQMIO --eventcontent LHE,RAWSIM,DQM \
-            --conditions auto:run2_mc_FULL --beamspot Realistic8TeVCollision
+            --conditions auto:run2_mc_FULL --beamspot Realistic25ns13TeVEarly2017Collision  #Realistic8TeVCollision
 	### move to submission directory
 	eval cd ${WORKDIR}
 	## Create execution script
@@ -177,14 +177,14 @@ EOF
     else
 	## Sherpack does not produce intermediary LHE file, go straightaway to hadronization
 	echo "Sherpack detected, skipping LHE production to Shower root file production"	
-	sed -e "s,XXX,$WORKDIR," ${GENFRAGMENT}.py > ${GENFRAGMENT}.py_ ; mv ${GENFRAGMENT}.py_ ${GENFRAGMENT}.py 
+	#sed -e "s,XXX,$WORKDIR," ${GENFRAGMENT}.py > ${GENFRAGMENT}.py_ ; mv ${GENFRAGMENT}.py_ ${GENFRAGMENT}.py 
 
 	scram b 
         ### make validation fragment
 	cmsDriver.py Configuration/Generator/python/${GENFRAGMENT}.py \
 	    -n ${NEVTS} --mc --no_exec --python_filename cmsrun_${OTAG}.py \
 	    -s GEN,VALIDATION:genvalid_all --datatier GEN-SIM,DQMIO --eventcontent RAWSIM,DQM \
-	    --conditions auto:run2_mc_FULL --beamspot Realistic8TeVCollision
+	    --conditions auto:run2_mc_FULL --beamspot Realistic25ns13TeVEarly2017Collision #Realistic8TeVCollision
     ### move to submission directory 
     eval cd ${WORKDIR}
     ### prepare submission script 
