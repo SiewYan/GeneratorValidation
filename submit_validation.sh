@@ -4,7 +4,7 @@
 # specify batch system 
 BATCH=LSF # SGE LSF 
 # number of jobs 
-NJOBS=100
+NJOBS=10
 # number of events per job 
 NEVTS=5000  
 # path to submit jobs 
@@ -25,9 +25,9 @@ GRIDPACKLIST=()
 GENFRAGMENTLIST=()
 
 #GRIDPACK
-#OTAGLIST+=(zee0j)
-#GRIDPACKLIST+=(${WORKDIR}/gridpacks/zee0j_slc6_amd64_gcc481_CMSSW_7_1_30_tarball.tar.xz)
-#GENFRAGMENTLIST+=(ZEE_13TeV_cfi)
+OTAGLIST+=(wellnu012j)
+GRIDPACKLIST+=(${WORKDIR}/GEN-packs/wellnu012j_5f_NLO_FXFX_tarball.tar.xz)
+GENFRAGMENTLIST+=(Hadronizer_CUEP8M1_2j_5F_13TeV_cff)
 
 #SHERPACK1
 OTAGLIST+=(sherpa_WtoLNu_2j_NLO_OpenLoops_CKKW_13TeV)
@@ -35,9 +35,9 @@ GRIDPACKLIST+=(${WORKDIR}/GEN-packs/sherpa_WtoLNu_2j_NLO_OpenLoops_CKKW_13TeV_MA
 GENFRAGMENTLIST+=(sherpa_WtoLNu_2j_NLO_OpenLoops_CKKW_13TeV_MASTER_cff)
 
 #SHERPACK2
-OTAGLIST+=(sherpa_WtoLNu_2j_NLO_BlackHat_CKKW_13TeV)
-GRIDPACKLIST+=(${WORKDIR}/GEN-packs/sherpa_WtoLNu_2j_NLO_BlackHat_CKKW_13TeV_MASTER.tgz)
-GENFRAGMENTLIST+=(sherpa_WtoLNu_2j_NLO_BlackHat_CKKW_13TeV_MASTER_cff)
+#OTAGLIST+=(sherpa_WtoLNu_2j_NLO_BlackHat_CKKW_13TeV)
+#GRIDPACKLIST+=(${WORKDIR}/GEN-packs/sherpa_WtoLNu_2j_NLO_BlackHat_CKKW_13TeV_MASTER.tgz)
+#GENFRAGMENTLIST+=(sherpa_WtoLNu_2j_NLO_BlackHat_CKKW_13TeV_MASTER_cff)
 
 ###############################################
 #GENFRAGMENTLIST+=( Hadronizer_TuneCUETP8M1_13TeV_MLM_5f_max2j_LHE_pythia8_cff ) 
@@ -230,7 +230,7 @@ EOF
 	    elif [ "${BATCH}" == "LSF" ] ; then  
             #suppress lsf emails
 		export LSB_JOB_REPORT_MAIL="N"
-		bsub -o ${ODIR}/${OTAG}_${IJOBS}.out  -q 1nd -C 0  -R "rusage[mem=6000:pool=10000]" -env "all , OFFSET=${IJOBS} , OTAG=${OTAG} , ODIR=${ODIR}" subscript_${OTAG}.sh
+		bsub -o ${ODIR}/${OTAG}_${IJOBS}.out  -q 1nw -C 0  -R "rusage[mem=6000:pool=60000]" -env "all , OFFSET=${IJOBS} , OTAG=${OTAG} , ODIR=${ODIR}" subscript_${OTAG}.sh
        	# unknown batch mode 
 	    else 
 		echo "Unknown batch system!"
