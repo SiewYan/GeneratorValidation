@@ -1,14 +1,14 @@
 #!/bin/bash 
 
 ### settings to modify
-RELEASE=CMSSW_9_3_8
+RELEASE=CMSSW_9_4_8
 DIRR=`pwd -P`
 ODIR="${DIRR}/samples"
 # maximum number of files to compare (making sure we are comparing the same state) 
-NFILES=100 
+NFILES=10 
 # name of sub directories in $ODIR containing the samples to compare 
-TAGONE=sherpa_ZtoEE_0j_OpenLoops_13TeV
-TAGTWO=zee0j
+TAGONE=sherpa_WtoLNu_2j_NLO_OpenLoops_CKKW_13TeV
+TAGTWO=wmnu012j_5f_LO_MLM
 ### done with settings 
 
 
@@ -80,4 +80,4 @@ compare_using_files.py DQM_V0001_R00000000__Global__${CMSSW_VERSION}_${TAGONE}__
 
 ### clean up 
 rm harvest.py 
-#rm DQM*.root 
+rm DQM*.root 

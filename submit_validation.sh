@@ -4,9 +4,9 @@
 # specify batch system 
 BATCH=LSF # SGE LSF 
 # number of jobs 
-NJOBS=10
+NJOBS=100
 # number of events per job 
-NEVTS=5000  
+NEVTS=1000  
 # path to submit jobs 
 WORKDIR=`pwd -P`
 # path for private fragments not yet in cmssw
@@ -14,7 +14,9 @@ FRAGMENTDIR=${WORKDIR}/fragments
 # release setup 
 #SCRAM_ARCH=slc6_amd64_gcc700
 #RELEASE=CMSSW_10_3_0_pre5
-SCRAM_ARCH=slc6_amd64_gcc493
+#SCRAM_ARCH=slc6_amd64_gcc493
+#RELEASE=CMSSW_9_4_8
+SCRAM_ARCH=slc6_amd64_gcc481
 RELEASE=CMSSW_9_4_8
 # path to store output files
 ODIR=${WORKDIR}/samples
@@ -24,20 +26,45 @@ OTAGLIST=()
 GRIDPACKLIST=() 
 GENFRAGMENTLIST=()
 
-#GRIDPACK
-OTAGLIST+=(wellnu012j)
-GRIDPACKLIST+=(${WORKDIR}/GEN-packs/wellnu012j_5f_NLO_FXFX_tarball.tar.xz)
-GENFRAGMENTLIST+=(Hadronizer_CUEP8M1_2j_5F_13TeV_cff)
+#GRIDPACK1
+OTAGLIST+=(wmnu012j_5f_LO_MLM)
+GRIDPACKLIST+=(${WORKDIR}/GEN-packs/wmnu012j_5f_LO_MLM_slc6_amd64_gcc481_CMSSW_7_1_30_tarball.tar.xz)
+GENFRAGMENTLIST+=(Hadronizer_TuneCUETP8M1_13TeV_MLM_5f_max2j_qCut20_LHE_pythia8_cff)
+
+#GRIDPACK2
+OTAGLIST+=(wmnu_LO)
+GRIDPACKLIST+=(${WORKDIR}/GEN-packs/wmnu_LO_slc6_amd64_gcc481_CMSSW_7_1_30_tarball.tar.xz)    
+GENFRAGMENTLIST+=(Hadronizer_TuneCUEP8M1_13TeV_LHE_pythia8_cff)
 
 #SHERPACK1
-OTAGLIST+=(sherpa_WtoLNu_2j_NLO_OpenLoops_CKKW_13TeV)
-GRIDPACKLIST+=(${WORKDIR}/GEN-packs/sherpa_WtoLNu_2j_NLO_OpenLoops_CKKW_13TeV_MASTER.tgz)
-GENFRAGMENTLIST+=(sherpa_WtoLNu_2j_NLO_OpenLoops_CKKW_13TeV_MASTER_cff)
+#OTAGLIST+=(sherpa_WtoMNu_LO_OpenLoops_13TeV)
+#GRIDPACKLIST+=(${WORKDIR}/GEN-packs/sherpa_WtoMNu_LO_OpenLoops_13TeV_MASTER.tgz)
+#GENFRAGMENTLIST+=(sherpa_WtoMNu_LO_OpenLoops_13TeV_MASTER_cff)
 
 #SHERPACK2
-#OTAGLIST+=(sherpa_WtoLNu_2j_NLO_BlackHat_CKKW_13TeV)
-#GRIDPACKLIST+=(${WORKDIR}/GEN-packs/sherpa_WtoLNu_2j_NLO_BlackHat_CKKW_13TeV_MASTER.tgz)
-#GENFRAGMENTLIST+=(sherpa_WtoLNu_2j_NLO_BlackHat_CKKW_13TeV_MASTER_cff)
+#OTAGLIST+=(sherpa_WtoMNu_NLO_OpenLoops_13TeV)
+#GRIDPACKLIST+=(${WORKDIR}/GEN-packs/sherpa_WtoMNu_NLO_OpenLoops_13TeV_MASTER.tgz)
+#GENFRAGMENTLIST+=(sherpa_WtoMNu_NLO_OpenLoops_13TeV_MASTER_cff)
+
+#SHERPACK3                                                                                                                                            
+OTAGLIST+=(sherpa_WtoMNu_LO_BlackHat_13TeV)
+GRIDPACKLIST+=(${WORKDIR}/GEN-packs/sherpa_WtoMNu_LO_BlackHat_13TeV_MASTER.tgz)
+GENFRAGMENTLIST+=(sherpa_WtoMNu_LO_BlackHat_13TeV_MASTER_cff)
+
+#SHERPACK4                                                                                                                                             
+OTAGLIST+=(sherpa_WtoMNu_NLO_BlackHat_13TeV)
+GRIDPACKLIST+=(${WORKDIR}/GEN-packs/sherpa_WtoMNu_NLO_BlackHat_13TeV_MASTER.tgz)
+GENFRAGMENTLIST+=(sherpa_WtoMNu_NLO_BlackHat_13TeV_MASTER_cff)
+
+#SHERPACK5                                                                                                                                      
+OTAGLIST+=(sherpa_WtoMNu_2j_LO_BlackHat_CKKW_13TeV)
+GRIDPACKLIST+=(${WORKDIR}/GEN-packs/sherpa_WtoMNu_2j_LO_BlackHat_CKKW_13TeV_MASTER.tgz)
+GENFRAGMENTLIST+=(sherpa_WtoMNu_2j_LO_BlackHat_CKKW_13TeV_MASTER_cff)
+
+#SHERPACK6                                                                                                                                           
+OTAGLIST+=(sherpa_WtoMNu_2j_LO_OpenLoops_CKKW_13TeV)
+GRIDPACKLIST+=(${WORKDIR}/GEN-packs/sherpa_WtoMNu_2j_LO_OpenLoops_CKKW_13TeV_MASTER.tgz)
+GENFRAGMENTLIST+=(sherpa_WtoMNu_2j_LO_OpenLoops_CKKW_13TeV_MASTER_cff)
 
 ###############################################
 #GENFRAGMENTLIST+=( Hadronizer_TuneCUETP8M1_13TeV_MLM_5f_max2j_LHE_pythia8_cff ) 
@@ -125,7 +152,7 @@ for ITAG in `seq 0 ${NTAG}`; do
 import FWCore.ParameterSet.Config as cms
 externalLHEProducer = cms.EDProducer('ExternalLHEProducer', 
 args = cms.vstring('${GRIDPACK}'),
-nEvents = cms.untracked.uint32(5000),
+nEvents = cms.untracked.uint32(${NEVTS}),
 numberOfParameters = cms.uint32(1),  
 outputFile = cms.string('cmsgrid_final.lhe'),
 scriptName = cms.FileInPath('GeneratorInterface/LHEInterface/data/run_generic_tarball_cvmfs.sh')
